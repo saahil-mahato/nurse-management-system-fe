@@ -1,0 +1,8 @@
+:root {
+
+  /* Forms */
+  --form-border-radius: 8px;
+  --form-padding: 24px 24px 0 24px;
+  --form-background-color: #ffffff;
+  --form-box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}

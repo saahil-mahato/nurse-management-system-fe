@@ -1,0 +1,8 @@
+.login-form {
+  width: 30%;
+  min-width: fit-content;
+  padding: var(--form-padding);
+  box-shadow: var(--form-box-shadow);
+  border-radius: var(--form-border-radius);
+  background-color: var(--form-background-color);
+}

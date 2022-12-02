@@ -1,0 +1,9 @@
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  justify-content: center;
+  background-image: url("/public/login-background.svg");
+}
