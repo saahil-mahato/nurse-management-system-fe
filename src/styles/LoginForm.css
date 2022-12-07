@@ -1,8 +1,16 @@
 .login-form {
-  width: 30%;
   min-width: fit-content;
   padding: var(--form-padding);
+  padding-top: 0;
   box-shadow: var(--form-box-shadow);
   border-radius: var(--form-border-radius);
   background-color: var(--form-background-color);
+}
+
+.form-title {
+  text-align: center;
+}
+
+.submit-button {
+  margin-right: var(--margin-2x);
 }

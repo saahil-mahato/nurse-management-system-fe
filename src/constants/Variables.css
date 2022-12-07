@@ -5,4 +5,9 @@
   --form-padding: 24px 24px 0 24px;
   --form-background-color: #ffffff;
   --form-box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+  /* Spacing */
+  --margin-1x: 4px;
+  --margin-2x: 8px;
+  --margin-3x: 16px;
 }
