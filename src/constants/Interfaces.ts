@@ -2,7 +2,7 @@ export interface StringMap {
   [key: string]: string;
 }
 
-export interface User {
+export interface UserDetails {
   firstName: string;
   middleName: string;
   lastName: string;
@@ -14,7 +14,7 @@ export interface User {
 }
 
 export interface UserData {
-  user: User;
+  userDetails: UserDetails;
   username: string;
   passwordHash: string;
 }
