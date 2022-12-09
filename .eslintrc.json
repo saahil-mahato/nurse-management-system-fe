@@ -10,6 +10,7 @@
   },
   "rules": {
     "arrow-parens": ["error", "as-needed"],
+    "operator-linebreak": "off",
     "object-curly-newline": "off",
     "import/no-unresolved": ["off"],
     "import/extensions": 0,

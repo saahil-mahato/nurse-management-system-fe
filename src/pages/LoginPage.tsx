@@ -9,10 +9,16 @@ import SignupForm from '../components/SignupForm';
 function LoginPage() {
   const [isSignupFormOpen, setIsSignupFormOpen] = useState(false);
 
+  /**
+   * Function to open the signup dialog.
+   */
   const openSignupDialog = () => {
     setIsSignupFormOpen(true);
   };
 
+  /**
+   * Function to close the signup dialog.
+   */
   const closeSignupDialog = () => {
     setIsSignupFormOpen(false);
   };

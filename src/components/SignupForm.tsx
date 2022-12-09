@@ -11,13 +11,13 @@ import {
   Select,
   notification,
 } from 'antd';
-import { NotificationPlacement } from 'antd/es/notification/interface';
 
 import { UserData } from '../constants/Interfaces';
 
-import { NotificationType } from '../constants/Types';
-
 import signupNewUser from '../services/SignupService';
+
+import deepTrim from '../utils/ObjectUtils';
+import openNotification from '../utils/Notifications';
 
 function SignupForm({
   isSignupFormOpen,
@@ -26,32 +26,62 @@ function SignupForm({
   const [signupForm] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
 
+  /**
+   * Function to cancel signup process.
+   */
   const cancelSignup = () => {
     signupForm.resetFields();
     closeSignupDialog();
   };
 
-  const openNotification = (
-    type: NotificationType,
-    message: string,
-    description: string,
-    placement: NotificationPlacement,
-  ) => {
-    api[type]({ message, description, placement });
+  /**
+   * Function to check if the age is within the valid range.
+   *
+   * @returns {Promise<any>}
+   */
+  const ValidateAge = (): Promise<any> => {
+    const inputAge: number = signupForm.getFieldValue('age');
+
+    if (inputAge >= 18 && inputAge <= 60) {
+      return Promise.resolve();
+    }
+
+    return Promise.reject(new Error('Age must be between 18 and 60 inclusive'));
   };
 
+  /**
+   * Function to check if the password and re-entered passwords match.
+   *
+   * @returns {Promise<any>}
+   */
+  const validatePassword = (): Promise<any> => {
+    if (
+      signupForm.getFieldValue('password') ===
+      signupForm.getFieldValue('reenterPassword')
+    ) {
+      return Promise.resolve();
+    }
+
+    return Promise.reject(new Error('The passwords must match'));
+  };
+
+  /**
+   * Function to submit the signup form.
+   */
   const submitSignup = () => {
     signupForm
       .validateFields()
       .then(async values => {
         const { username, password, reenterPassword, ...rest } = values;
         const userData: UserData = {
-          userDetails: rest,
-          username,
-          passwordHash: hash(password),
+          userDetails: deepTrim(rest),
+          username: deepTrim(username),
+          password: hash(password),
         };
+
         await signupNewUser(userData);
         openNotification(
+          api,
           'success',
           'Sign up success',
           'User has been successfully signed up',
@@ -61,11 +91,15 @@ function SignupForm({
       })
       .catch(() => {
         openNotification(
+          api,
           'error',
           'Sign up failed',
-          'An error occured',
+          'An error occurred',
           'bottomLeft',
         );
+      })
+      .finally(() => {
+        signupForm.resetFields();
       });
   };
 
@@ -99,6 +133,7 @@ function SignupForm({
             name="firstName"
             rules={[
               { required: true, message: 'Please enter your first name' },
+              { whitespace: true, message: 'Please enter your first name' },
             ]}
           >
             <Input />
@@ -111,7 +146,10 @@ function SignupForm({
           <Form.Item
             label="Last name"
             name="lastName"
-            rules={[{ required: true, message: 'Please enter your last name' }]}
+            rules={[
+              { required: true, message: 'Please enter your last name' },
+              { whitespace: true, message: 'Please enter your last name' },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -119,9 +157,13 @@ function SignupForm({
           <Form.Item
             label="Age"
             name="age"
-            rules={[{ required: true, message: 'Please enter your age' }]}
+            rules={[
+              { required: true, message: 'Please enter your age' },
+              { type: 'number', message: 'Please enter a valid number' },
+              { validator: ValidateAge },
+            ]}
           >
-            <InputNumber min={18} max={100} />
+            <InputNumber />
           </Form.Item>
 
           <Form.Item
@@ -130,16 +172,19 @@ function SignupForm({
             rules={[{ required: true, message: 'Please enter your gender' }]}
           >
             <Select>
-              <Select.Option value="male">male</Select.Option>
-              <Select.Option value="female">female</Select.Option>
-              <Select.Option value="other">other</Select.Option>
+              <Select.Option value="male">Male</Select.Option>
+              <Select.Option value="female">Female</Select.Option>
+              <Select.Option value="other">Other</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
             label="Address"
             name="address"
-            rules={[{ required: true, message: 'Please enter your address' }]}
+            rules={[
+              { required: true, message: 'Please enter your address' },
+              { whitespace: true, message: 'Please enter your address' },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -147,7 +192,11 @@ function SignupForm({
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: 'Please enter your email' }]}
+            rules={[
+              { required: true, message: 'Please enter your email' },
+              { type: 'email', message: 'Please enter a valid email' },
+              { whitespace: true, message: 'Please enter your email' },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -157,6 +206,7 @@ function SignupForm({
             name="contactNumber"
             rules={[
               { required: true, message: 'Please enter your contact number' },
+              { whitespace: true, message: 'Please enter your contact number' },
             ]}
           >
             <Input />
@@ -167,6 +217,7 @@ function SignupForm({
             name="designation"
             rules={[
               { required: true, message: 'Please enter your designation' },
+              { whitespace: true, message: 'Please enter your designation' },
             ]}
           >
             <Input />
@@ -175,7 +226,10 @@ function SignupForm({
           <Form.Item
             label="Username"
             name="username"
-            rules={[{ required: true, message: 'Please enter your username' }]}
+            rules={[
+              { required: true, message: 'Please enter your username' },
+              { whitespace: true, message: 'Please enter your username' },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -183,7 +237,10 @@ function SignupForm({
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: 'Please enter your password' }]}
+            rules={[
+              { required: true, message: 'Please enter your password' },
+              { whitespace: true, message: 'Please enter your password' },
+            ]}
           >
             <Input.Password />
           </Form.Item>
@@ -193,6 +250,8 @@ function SignupForm({
             name="reenterPassword"
             rules={[
               { required: true, message: 'Please re-enter your password' },
+              { whitespace: true, message: 'Please re-enter your password' },
+              { validator: validatePassword },
             ]}
           >
             <Input.Password />

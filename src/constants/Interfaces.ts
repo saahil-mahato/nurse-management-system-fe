@@ -4,7 +4,7 @@ export interface StringMap {
 
 export interface UserDetails {
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
   age: number;
   gender: string;
@@ -16,5 +16,5 @@ export interface UserDetails {
 export interface UserData {
   userDetails: UserDetails;
   username: string;
-  passwordHash: string;
+  password: string;
 }
