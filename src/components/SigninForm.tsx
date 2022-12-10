@@ -1,21 +1,21 @@
-import '../styles/LoginForm.css';
+import '../styles/SigninForm.css';
 
 import PropTypes, { InferProps } from 'prop-types';
 
 import { Button, Checkbox, Form, Input } from 'antd';
 
-function LoginForm({
+function SigninForm({
   openSignupDialog,
-}: InferProps<typeof LoginForm.propTypes>) {
+}: InferProps<typeof SigninForm.propTypes>) {
   return (
     <Form
-      className="login-form"
-      name="login"
+      className="signin-form"
+      name="signin"
       labelCol={{ span: 8 }}
       initialValues={{ remember: false }}
       autoComplete="off"
     >
-      <h1 className="form-title">Login</h1>
+      <h1 className="form-title">Signin</h1>
 
       <Form.Item
         label="Username"
@@ -43,7 +43,7 @@ function LoginForm({
 
       <Form.Item wrapperCol={{ offset: 8 }}>
         <Button className="submit-button" type="primary" htmlType="submit">
-          Login
+          Signin
         </Button>
 
         <Button type="default" onClick={openSignupDialog}>
@@ -54,8 +54,8 @@ function LoginForm({
   );
 }
 
-LoginForm.propTypes = {
+SigninForm.propTypes = {
   openSignupDialog: PropTypes.func.isRequired,
 };
 
-export default LoginForm;
+export default SigninForm;

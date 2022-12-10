@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import '../styles/LoginPage.css';
+import '../styles/SigninPage.css';
 import '../constants/Variables.css';
 
-import LoginForm from '../components/LoginForm';
+import SigninForm from '../components/SigninForm';
 import SignupForm from '../components/SignupForm';
 
-function LoginPage() {
+function SigninPage() {
   const [isSignupFormOpen, setIsSignupFormOpen] = useState(false);
 
   /**
@@ -26,7 +26,7 @@ function LoginPage() {
   return (
     <>
       <div className="wrapper">
-        <LoginForm openSignupDialog={openSignupDialog} />
+        <SigninForm openSignupDialog={openSignupDialog} />
       </div>
       <SignupForm
         isSignupFormOpen={isSignupFormOpen}
@@ -36,4 +36,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default SigninPage;
