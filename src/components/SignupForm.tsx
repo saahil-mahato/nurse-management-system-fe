@@ -1,7 +1,5 @@
 import PropTypes, { InferProps } from 'prop-types';
 
-import hash from 'object-hash';
-
 import {
   Button,
   Form,
@@ -76,10 +74,23 @@ function SignupForm({
         const userData: UserData = {
           userDetails: deepTrim(rest),
           username: deepTrim(username),
-          password: hash(password),
+          password,
         };
 
-        await signupNewUser(userData);
+        try {
+          await signupNewUser(userData);
+        } catch (error: any) {
+          openNotification(
+            api,
+            'error',
+            'Sign up failed',
+            error?.response?.data?.message || 'An error occurred',
+            'bottomLeft',
+          );
+
+          return;
+        }
+
         openNotification(
           api,
           'success',
@@ -88,18 +99,16 @@ function SignupForm({
           'bottomLeft',
         );
         closeSignupDialog();
+        signupForm.resetFields();
       })
       .catch(() => {
         openNotification(
           api,
           'error',
           'Sign up failed',
-          'An error occurred',
+          'Please fill up all the required fields',
           'bottomLeft',
         );
-      })
-      .finally(() => {
-        signupForm.resetFields();
       });
   };
 

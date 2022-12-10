@@ -2,55 +2,98 @@ import '../styles/SigninForm.css';
 
 import PropTypes, { InferProps } from 'prop-types';
 
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input, notification } from 'antd';
+
+import signinUser from '../services/SigninService';
+
+import openNotification from '../utils/Notifications';
 
 function SigninForm({
   openSignupDialog,
 }: InferProps<typeof SigninForm.propTypes>) {
+  const [signinForm] = Form.useForm();
+  const [api, contextHolder] = notification.useNotification();
+
+  /**
+   * Function to signin a user.
+   */
+  const submitSignin = () => {
+    signinForm
+      .validateFields()
+      .then(async values => {
+        try {
+          await signinUser(values);
+        } catch (error: any) {
+          openNotification(
+            api,
+            'error',
+            'Sign in failed',
+            error?.response?.data?.message || 'An error occurred',
+            'bottomLeft',
+          );
+        }
+      })
+      .catch(() => {
+        openNotification(
+          api,
+          'error',
+          'Sign in failed',
+          'Please fill up all required fields',
+          'bottomLeft',
+        );
+      });
+  };
+
   return (
-    <Form
-      className="signin-form"
-      name="signin"
-      labelCol={{ span: 8 }}
-      initialValues={{ remember: false }}
-      autoComplete="off"
-    >
-      <h1 className="form-title">Signin</h1>
-
-      <Form.Item
-        label="Username"
-        name="username"
-        rules={[{ required: true, message: 'Please enter your username' }]}
+    <>
+      {contextHolder}
+      <Form
+        className="signin-form"
+        name="signin"
+        form={signinForm}
+        labelCol={{ span: 8 }}
+        autoComplete="off"
       >
-        <Input />
-      </Form.Item>
+        <h1 className="form-title">Signin</h1>
 
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: 'Please enter your password' }]}
-      >
-        <Input.Password />
-      </Form.Item>
+        <Form.Item
+          label="Username"
+          name="username"
+          rules={[
+            { required: true, message: 'Please enter your username' },
+            { whitespace: true, message: 'Please enter your username' },
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-      <Form.Item
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{ offset: 8 }}
-      >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[
+            { required: true, message: 'Please enter your password' },
+            { whitespace: true, message: 'Please enter your username' },
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
 
-      <Form.Item wrapperCol={{ offset: 8 }}>
-        <Button className="submit-button" type="primary" htmlType="submit">
-          Signin
-        </Button>
+        <Form.Item wrapperCol={{ offset: 8 }}>
+          <Button
+            className="submit-button"
+            type="primary"
+            htmlType="submit"
+            onClick={submitSignin}
+          >
+            Signin
+          </Button>
 
-        <Button type="default" onClick={openSignupDialog}>
-          Signup
-        </Button>
-      </Form.Item>
-    </Form>
+          <Button type="default" onClick={openSignupDialog}>
+            Signup
+          </Button>
+        </Form.Item>
+      </Form>
+    </>
   );
 }
 

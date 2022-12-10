@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { UserData } from '../constants/Interfaces';
 import endpoints from '../constants/Endpoints';
+import { UserData } from '../constants/Interfaces';
 
 /**
  * Function to add a new user to database.
