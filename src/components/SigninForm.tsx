@@ -4,6 +4,8 @@ import PropTypes, { InferProps } from 'prop-types';
 
 import { Button, Form, Input, notification } from 'antd';
 
+import { useNavigate } from 'react-router-dom';
+
 import signinUser from '../services/SigninService';
 
 import openNotification from '../utils/Notifications';
@@ -12,6 +14,7 @@ function SigninForm({
   openSignupDialog,
 }: InferProps<typeof SigninForm.propTypes>) {
   const [signinForm] = Form.useForm();
+  const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
 
   /**
@@ -23,6 +26,7 @@ function SigninForm({
       .then(async values => {
         try {
           await signinUser(values);
+          navigate('/home');
         } catch (error: any) {
           openNotification(
             api,
