@@ -6,7 +6,7 @@ import { Button, Form, Input, notification } from 'antd';
 
 import { useNavigate } from 'react-router-dom';
 
-import signinUser from '../services/SigninService';
+import { signinUser } from '../services/AuthenticationService';
 
 import openNotification from '../utils/Notifications';
 

@@ -7,7 +7,7 @@
   --form-box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
   /* Spacing */
-  --margin-1x: 4px;
-  --margin-2x: 8px;
-  --margin-3x: 16px;
+  --spacing-1x: 4px;
+  --spacing-2x: 8px;
+  --spacing-3x: 16px;
 }

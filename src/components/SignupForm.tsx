@@ -12,7 +12,7 @@ import {
 
 import { UserData } from '../constants/Interfaces';
 
-import signupNewUser from '../services/SignupService';
+import { signupNewUser } from '../services/AuthenticationService';
 
 import deepTrim from '../utils/ObjectUtils';
 import openNotification from '../utils/Notifications';

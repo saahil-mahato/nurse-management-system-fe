@@ -1,0 +1,20 @@
+.home-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  background-color: rgba(115, 143, 179, 0.1);
+}
+
+.sidebar {
+  min-width: 200px;
+}
+
+.menu {
+  height: 100%;
+}
+
+.view {
+  flex-grow: 1;
+}
