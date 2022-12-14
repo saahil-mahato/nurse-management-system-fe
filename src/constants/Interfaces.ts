@@ -1,10 +1,9 @@
-import { Timestamp } from 'rxjs';
-
 export interface StringMap {
   [key: string]: string;
 }
 
 export interface UserDetails {
+  _id?: string;
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -29,16 +28,17 @@ export interface UserSigninData {
 export interface NurseData extends UserDetails {
   department: string;
   isRoundingManager: boolean;
-  dutyStartTime: Timestamp<number>;
-  dutyEndTime: Timestamp<number>;
+  dutyStartTime: number;
+  dutyEndTime: number;
   workingDays: Array<string>;
 }
 
 export interface NurseTableData {
+  key?: string;
   name: string;
   email: string;
   contact: string;
   workingDays: string;
-  dutyStartTime: Timestamp<number>;
-  dutyEndTime: Timestamp<number>;
+  dutyStartTime: string;
+  dutyEndTime: string;
 }

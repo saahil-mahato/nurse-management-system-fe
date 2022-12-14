@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react';
 
-import { Table } from 'antd';
+import { Table, notification, FloatButton } from 'antd';
+
+import { PlusCircleOutlined } from '@ant-design/icons';
 
 import '../styles/NurseView.css';
+
+import NurseForm from './NurseForm';
 
 import { NurseData, NurseTableData } from '../constants/Interfaces';
 
 import { getAllNurses } from '../services/NurseService';
+
+import openNotification from '../utils/Notifications';
+import { timestampToTime } from '../utils/DateTime';
 
 const columns = [
   {
@@ -44,7 +51,8 @@ const columns = [
 const refactorNursesData = (
   nurses: Array<NurseData>,
 ): Array<NurseTableData> => {
-  const newNurseData = nurses.map((nurse: NurseData) => ({
+  const nurseTableData = nurses.map((nurse: NurseData) => ({
+    key: nurse._id,
     name: nurse.firstName.concat(
       ' ',
       nurse.middleName || '',
@@ -54,31 +62,81 @@ const refactorNursesData = (
     email: nurse.email,
     contact: nurse.contactNumber,
     workingDays: nurse.workingDays.join(', '),
-    dutyStartTime: nurse.dutyStartTime,
-    dutyEndTime: nurse.dutyEndTime,
+    dutyStartTime: timestampToTime(nurse.dutyStartTime),
+    dutyEndTime: timestampToTime(nurse.dutyEndTime),
   }));
 
-  return newNurseData;
+  return nurseTableData;
 };
 
 function NurseView() {
   const [nurses, setNurses] = useState<Array<NurseTableData>>([]);
+  const [isNurseFormOpen, setIsNurseFormOpen] = useState<boolean>(false);
+  const [isNursesLoading, setIsNursesLoading] = useState<boolean>(false);
+  const [api, contextHolder] = notification.useNotification();
+
+  /**
+   * Function to open the nurse dialog.
+   */
+  const openNurseDialog = () => {
+    setIsNurseFormOpen(true);
+  };
+
+  /**
+   * Function to close the nurse dialog.
+   */
+  const closeNurseDialog = () => {
+    setIsNurseFormOpen(false);
+  };
 
   useEffect(() => {
-    getAllNurses().then(response => {
-      const newNurseData = refactorNursesData(response.data);
-      setNurses([...newNurseData]);
-    });
+    setIsNursesLoading(true);
+    getAllNurses()
+      .then(response => {
+        const nurseTableData = refactorNursesData(response.data);
+        setNurses([...nurseTableData]);
+      })
+      .catch(() => {
+        openNotification(
+          api,
+          'error',
+          'Error',
+          'Could not fetch nurses',
+          'bottomLeft',
+        );
+      })
+      .finally(() => {
+        setIsNursesLoading(false);
+      });
   }, []);
 
   return (
     <>
+      {contextHolder}
       <div className="header">
         <h1>Nurses</h1>
       </div>
       <div className="body">
-        <Table className="table" columns={columns} dataSource={nurses} />
+        <Table
+          className="table"
+          columns={columns}
+          dataSource={nurses}
+          bordered
+          loading={isNursesLoading}
+          sticky
+        />
       </div>
+      <FloatButton
+        icon={<PlusCircleOutlined />}
+        type="primary"
+        style={{ right: 24 }}
+        onClick={openNurseDialog}
+      />
+      <NurseForm
+        isNurseFormOpen={isNurseFormOpen}
+        closeNurseDialog={closeNurseDialog}
+        isEditMode={false}
+      />
     </>
   );
 }

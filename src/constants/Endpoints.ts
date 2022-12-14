@@ -6,7 +6,7 @@ const endpoints: StringMap = {
   getAllNurses: `${environment}/nurses`,
   signinUser: `${environment}/auth/signin`,
   signupNewUser: `${environment}/auth/signup`,
-  addNewNurse: `${environment}/nurses/addNewNurse`,
+  addNewNurse: `${environment}/nurses/add-new-nurse`,
 };
 
 export default endpoints;

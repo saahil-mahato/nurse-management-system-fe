@@ -28,8 +28,8 @@ function SignupForm({
    * Function to cancel signup process.
    */
   const cancelSignup = () => {
-    signupForm.resetFields();
     closeSignupDialog();
+    signupForm.resetFields();
   };
 
   /**
@@ -172,7 +172,7 @@ function SignupForm({
               { validator: ValidateAge },
             ]}
           >
-            <InputNumber />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
