@@ -14,27 +14,27 @@ import UserView from '../components/UserView';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const getItem = (
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  type?: 'group',
-): MenuItem =>
-  ({
-    key,
-    icon,
-    children,
-    label,
-    type,
-  } as MenuItem);
-
-const items: MenuItem[] = [
-  getItem(<Link to="/home/nurses">Nurses</Link>, '1', <BookFilled />),
-  getItem(<Link to="/home/users">Users</Link>, '2', <ProfileFilled />),
-];
-
 function HomePage() {
+  const getItem = (
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode,
+    children?: MenuItem[],
+    type?: 'group',
+  ): MenuItem =>
+    ({
+      key,
+      icon,
+      children,
+      label,
+      type,
+    } as MenuItem);
+
+  const items: MenuItem[] = [
+    getItem(<Link to="/home/nurses">Nurses</Link>, '1', <BookFilled />),
+    getItem(<Link to="/home/users">Users</Link>, '2', <ProfileFilled />),
+  ];
+
   return (
     <div className="home-wrapper">
       <div className="sidebar">

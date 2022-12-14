@@ -12,6 +12,7 @@
     "no-underscore-dangle": "off",
     "arrow-parens": ["error", "as-needed"],
     "implicit-arrow-linebreak": "off",
+    "react/forbid-prop-types": 0,
     "operator-linebreak": "off",
     "object-curly-newline": "off",
     "import/no-unresolved": ["off"],

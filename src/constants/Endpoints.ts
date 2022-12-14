@@ -3,10 +3,10 @@ import environment from '../config';
 import { StringMap } from './Interfaces';
 
 const endpoints: StringMap = {
-  getAllNurses: `${environment}/nurses`,
+  nurse: `${environment}/nurses`,
   signinUser: `${environment}/auth/signin`,
   signupNewUser: `${environment}/auth/signup`,
-  addNewNurse: `${environment}/nurses/add-new-nurse`,
+  updateNurse: `${environment}/nurses/:id`,
 };
 
 export default endpoints;

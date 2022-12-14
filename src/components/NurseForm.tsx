@@ -16,7 +16,7 @@ import {
 
 import type { SelectProps } from 'antd';
 
-import { addNewNurse } from '../services/NurseService';
+import { addNewNurse, updateNurse } from '../services/NurseService';
 
 import deepTrim from '../utils/ObjectUtils';
 import { dateToTimestamp } from '../utils/DateTime';
@@ -26,6 +26,9 @@ function NurseForm({
   isNurseFormOpen,
   closeNurseDialog,
   isEditMode,
+  initialValues,
+  fetchAllNurses,
+  openSuccessNotification,
 }: InferProps<typeof NurseForm.propTypes>) {
   const [nurseForm] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
@@ -80,7 +83,11 @@ function NurseForm({
         });
 
         try {
-          await addNewNurse(nurseData);
+          if (isEditMode) {
+            await updateNurse(initialValues?._id, nurseData);
+          } else {
+            await addNewNurse(nurseData);
+          }
         } catch (error: any) {
           openNotification(
             api,
@@ -95,18 +102,13 @@ function NurseForm({
           setIsNurseAdding(false);
         }
 
-        openNotification(
-          api,
-          'success',
-          'Success',
-          'Nurse has been successfully added',
-          'bottomLeft',
-        );
+        openSuccessNotification(isEditMode);
         closeNurseDialog();
         nurseForm.resetFields();
+        fetchAllNurses();
       })
       .catch(() => {
-        openNotification(
+        openSuccessNotification(
           api,
           'error',
           'Error',
@@ -146,7 +148,9 @@ function NurseForm({
           form={nurseForm}
           autoComplete="off"
           labelCol={{ span: 5 }}
-          initialValues={{ isRoundingManager: false }}
+          initialValues={
+            isEditMode ? initialValues : { isRoundingManager: false }
+          }
         >
           <Form.Item
             label="First name"
@@ -301,6 +305,13 @@ NurseForm.propTypes = {
   isNurseFormOpen: PropTypes.bool.isRequired,
   closeNurseDialog: PropTypes.func.isRequired,
   isEditMode: PropTypes.bool.isRequired,
+  initialValues: PropTypes.any,
+  fetchAllNurses: PropTypes.func.isRequired,
+  openSuccessNotification: PropTypes.func.isRequired,
+};
+
+NurseForm.defaultProps = {
+  initialValues: undefined,
 };
 
 export default NurseForm;
