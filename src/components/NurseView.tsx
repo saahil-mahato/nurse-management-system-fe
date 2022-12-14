@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { Table, notification, FloatButton } from 'antd';
+import { Table, notification, FloatButton, Tag } from 'antd';
 
 import { PlusCircleOutlined } from '@ant-design/icons';
 
@@ -14,6 +14,16 @@ import { getAllNurses } from '../services/NurseService';
 
 import openNotification from '../utils/Notifications';
 import { timestampToTime } from '../utils/DateTime';
+
+const renderDays = (workingDays: Array<string>) => (
+  <>
+    {workingDays.map((workingDay: any) => (
+      <Tag style={{ margin: 2 }} color="blue" key={workingDay}>
+        {workingDay}
+      </Tag>
+    ))}
+  </>
+);
 
 const columns = [
   {
@@ -35,6 +45,7 @@ const columns = [
     title: 'Working Days',
     dataIndex: 'workingDays',
     key: 'workingDays',
+    render: renderDays,
   },
   {
     title: 'Duty Start Time',
@@ -61,7 +72,7 @@ const refactorNursesData = (
     ),
     email: nurse.email,
     contact: nurse.contactNumber,
-    workingDays: nurse.workingDays.join(', '),
+    workingDays: nurse.workingDays,
     dutyStartTime: timestampToTime(nurse.dutyStartTime),
     dutyEndTime: timestampToTime(nurse.dutyEndTime),
   }));

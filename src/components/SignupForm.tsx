@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import PropTypes, { InferProps } from 'prop-types';
 
 import {
@@ -23,6 +25,7 @@ function SignupForm({
 }: InferProps<typeof SignupForm.propTypes>) {
   const [signupForm] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+  const [isUserAdding, setIsUserAdding] = useState<boolean>(false);
 
   /**
    * Function to cancel signup process.
@@ -70,6 +73,8 @@ function SignupForm({
     signupForm
       .validateFields()
       .then(async values => {
+        setIsUserAdding(true);
+
         const { username, password, reenterPassword, ...rest } = values;
         const userData: UserData = {
           userDetails: deepTrim(rest),
@@ -89,6 +94,8 @@ function SignupForm({
           );
 
           return;
+        } finally {
+          setIsUserAdding(false);
         }
 
         openNotification(
@@ -124,7 +131,12 @@ function SignupForm({
           <Button key="back" onClick={cancelSignup}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" onClick={submitSignup}>
+          <Button
+            key="submit"
+            type="primary"
+            onClick={submitSignup}
+            loading={isUserAdding}
+          >
             Signup
           </Button>,
         ]}

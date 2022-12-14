@@ -1,10 +1,12 @@
-import '../styles/SigninForm.css';
+import { useState } from 'react';
 
 import PropTypes, { InferProps } from 'prop-types';
 
 import { Button, Form, Input, notification } from 'antd';
 
 import { useNavigate } from 'react-router-dom';
+
+import '../styles/SigninForm.css';
 
 import { signinUser } from '../services/AuthenticationService';
 
@@ -16,11 +18,13 @@ function SigninForm({
   const [signinForm] = Form.useForm();
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
+  const [isUserVerifying, setIsUserVerifying] = useState<boolean>(false);
 
   /**
    * Function to signin a user.
    */
   const submitSignin = () => {
+    setIsUserVerifying(true);
     signinForm
       .validateFields()
       .then(async values => {
@@ -45,6 +49,9 @@ function SigninForm({
           'Please fill up all required fields',
           'bottomLeft',
         );
+      })
+      .finally(() => {
+        setIsUserVerifying(false);
       });
   };
 
@@ -88,6 +95,7 @@ function SigninForm({
             type="primary"
             htmlType="submit"
             onClick={submitSignin}
+            loading={isUserVerifying}
           >
             Signin
           </Button>

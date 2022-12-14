@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import PropTypes, { InferProps } from 'prop-types';
 
 import {
@@ -27,6 +29,7 @@ function NurseForm({
 }: InferProps<typeof NurseForm.propTypes>) {
   const [nurseForm] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+  const [isNurseAdding, setIsNurseAdding] = useState<boolean>(false);
 
   const timeFormat = 'HH:mm';
   const days: SelectProps['options'] = [
@@ -69,6 +72,7 @@ function NurseForm({
     nurseForm
       .validateFields()
       .then(async values => {
+        setIsNurseAdding(true);
         const nurseData = deepTrim({
           ...values,
           dutyStartTime: dateToTimestamp(values.dutyStartTime.toString()),
@@ -87,6 +91,8 @@ function NurseForm({
           );
 
           return;
+        } finally {
+          setIsNurseAdding(false);
         }
 
         openNotification(
@@ -122,7 +128,12 @@ function NurseForm({
           <Button key="back" onClick={cancelNurseForm}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" onClick={submitNurseForm}>
+          <Button
+            key="submit"
+            type="primary"
+            onClick={submitNurseForm}
+            loading={isNurseAdding}
+          >
             {isEditMode ? 'Edit' : 'Add'}
           </Button>,
         ]}

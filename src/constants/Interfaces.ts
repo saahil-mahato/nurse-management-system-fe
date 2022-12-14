@@ -38,7 +38,7 @@ export interface NurseTableData {
   name: string;
   email: string;
   contact: string;
-  workingDays: string;
+  workingDays: Array<string>;
   dutyStartTime: string;
   dutyEndTime: string;
 }
