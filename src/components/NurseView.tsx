@@ -4,7 +4,15 @@ import dayjs from 'dayjs';
 
 import type { MenuProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { Table, notification, FloatButton, Tag, Button, Dropdown } from 'antd';
+import {
+  Table,
+  notification,
+  FloatButton,
+  Tag,
+  Button,
+  Dropdown,
+  Modal,
+} from 'antd';
 
 import { PlusCircleOutlined, MenuOutlined } from '@ant-design/icons';
 
@@ -14,7 +22,7 @@ import NurseForm from './NurseForm';
 
 import { NurseData, NurseTableData } from '../constants/Interfaces';
 
-import { getAllNurses } from '../services/NurseService';
+import { getAllNurses, deleteNurse } from '../services/NurseService';
 
 import { timestampToTime } from '../utils/DateTime';
 import openNotification from '../utils/Notifications';
@@ -23,8 +31,11 @@ function NurseView() {
   const [nurses, setNurses] = useState<Array<NurseTableData>>([]);
   const [isNurseFormOpen, setIsNurseFormOpen] = useState<boolean>(false);
   const [isNursesLoading, setIsNursesLoading] = useState<boolean>(false);
+  const [isNurseDeleting, setIsNurseDeleting] = useState<boolean>(false);
   const [editValues, setEditValues] = useState<object | undefined>(undefined);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
+    useState<boolean>(false);
   const [api, contextHolder] = notification.useNotification();
 
   const originalNursesData = useRef<Array<NurseData>>([]);
@@ -46,6 +57,20 @@ function NurseView() {
     setIsEditMode(false);
   };
 
+  /**
+   * Function to open delete dialog.
+   */
+  const openDeleteDialog = () => {
+    setIsConfirmationDialogOpen(true);
+  };
+
+  /**
+   * Function to close delete dialog.
+   */
+  const closeDeleteDialog = () => {
+    setIsConfirmationDialogOpen(false);
+  };
+
   const items: MenuProps['items'] = [
     {
       key: '0',
@@ -58,6 +83,9 @@ function NurseView() {
     {
       key: '1',
       label: 'Delete',
+      onClick: () => {
+        openDeleteDialog();
+      },
     },
   ];
 
@@ -194,6 +222,37 @@ function NurseView() {
       });
   };
 
+  /**
+   * Function to handle delete.
+   */
+  const deleteANurse = async () => {
+    setIsNurseDeleting(true);
+    try {
+      await deleteNurse(selectedNurse.current._id);
+    } catch (error: any) {
+      openNotification(
+        api,
+        'error',
+        'Error',
+        error?.response?.data?.message || 'An error occurred',
+        'bottomLeft',
+      );
+
+      return;
+    } finally {
+      setIsNurseDeleting(false);
+    }
+    setIsConfirmationDialogOpen(false);
+    openNotification(
+      api,
+      'success',
+      'Success',
+      'Nurse successfully deleted',
+      'bottomLeft',
+    );
+    fetchAllNurses();
+  };
+
   useEffect(fetchAllNurses, []);
 
   return (
@@ -215,6 +274,7 @@ function NurseView() {
       <FloatButton
         icon={<PlusCircleOutlined />}
         type="primary"
+        tooltip={<div>Add nurse</div>}
         style={{ right: 24 }}
         onClick={() => openNurseDialog(false)}
       />
@@ -227,6 +287,30 @@ function NurseView() {
           fetchAllNurses={fetchAllNurses}
           openSuccessNotification={openSuccessNotification}
         />
+      )}
+      {isConfirmationDialogOpen && (
+        <Modal
+          title="Delete nurse"
+          open={isConfirmationDialogOpen}
+          onCancel={closeDeleteDialog}
+          footer={[
+            <Button key="back" onClick={closeDeleteDialog}>
+              Cancel
+            </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              danger
+              onClick={deleteANurse}
+              loading={isNurseDeleting}
+            >
+              Delete
+            </Button>,
+          ]}
+          onOk={deleteANurse}
+        >
+          <p>Are you sure you want to delete the nurse?</p>
+        </Modal>
       )}
     </>
   );

@@ -1,12 +1,11 @@
-import environment from '../config';
-
 import { StringMap } from './Interfaces';
 
 const endpoints: StringMap = {
-  nurse: `${environment}/nurses`,
-  signinUser: `${environment}/auth/signin`,
-  signupNewUser: `${environment}/auth/signup`,
-  updateNurse: `${environment}/nurses/:id`,
+  nurse: '/nurses',
+  getUser: '/auth/user',
+  signinUser: '/auth/signin',
+  updateNurse: '/nurses/:id',
+  signupNewUser: '/auth/signup',
 };
 
 export default endpoints;

@@ -9,8 +9,8 @@ import { Menu } from 'antd';
 
 import { BookFilled, ProfileFilled } from '@ant-design/icons';
 
-import NurseView from '../components/NurseView';
 import UserView from '../components/UserView';
+import NurseView from '../components/NurseView';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -41,6 +41,7 @@ function HomePage() {
         <Menu
           className="menu"
           defaultSelectedKeys={['1']}
+          defaultActiveFirst
           theme="dark"
           items={items}
         />

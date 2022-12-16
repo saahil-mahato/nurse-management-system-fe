@@ -30,7 +30,7 @@ function SigninForm({
       .then(async values => {
         try {
           await signinUser(values);
-          navigate('/home');
+          navigate('/home/nurses');
         } catch (error: any) {
           openNotification(
             api,

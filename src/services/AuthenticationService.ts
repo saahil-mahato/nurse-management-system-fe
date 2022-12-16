@@ -1,4 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+
+import http from './HttpService';
 
 import endpoints from '../constants/Endpoints';
 import { UserData, UserSigninData } from '../constants/Interfaces';
@@ -9,9 +11,7 @@ import { UserData, UserSigninData } from '../constants/Interfaces';
  * @param {UserSigninData} userSigninData - The credentials of the user.
  */
 export const signinUser = async (userSigninData: UserSigninData) => {
-  await axios.post(endpoints.signinUser, userSigninData, {
-    withCredentials: true,
-  });
+  await http.post(endpoints.signinUser, userSigninData);
 };
 
 /**
@@ -23,7 +23,17 @@ export const signinUser = async (userSigninData: UserSigninData) => {
 export const signupNewUser = async (
   userData: UserData,
 ): Promise<AxiosResponse<any, any>> => {
-  const response = await axios.post(endpoints.signupNewUser, userData);
+  const response = await http.post(endpoints.signupNewUser, userData);
+
+  return response;
+};
+
+/**
+ * Function to get a user.
+ *
+ */
+export const getUser = async (): Promise<AxiosResponse<any, any>> => {
+  const response = await http.get(endpoints.getUser);
 
   return response;
 };
